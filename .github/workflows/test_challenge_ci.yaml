@@ -6,7 +6,7 @@ on:
       - 'python/test_challenge/**'
   pull_request:
     paths:
-      - 'pyhton/test_challenge/**'
+      - 'python/test_challenge/**'
 
 jobs:
   test:
