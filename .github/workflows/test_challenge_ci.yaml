@@ -1,0 +1,26 @@
+name: Test Challenge CI
+
+on:
+  push:
+    paths:
+      - 'python/test_challenge/**'
+  pull_request:
+    paths:
+      - 'pyhton/test_challenge/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.8'
+      
+      - name: Run unit tests
+        run: |
+          cd pyton/test_challenge
+          python -m unittest test_main.py -v
