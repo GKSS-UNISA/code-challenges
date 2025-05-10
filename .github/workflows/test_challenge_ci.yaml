@@ -1,4 +1,4 @@
-name: Test Challenge CI
+name: Python Test Challenge CI
 
 on:
   push:
