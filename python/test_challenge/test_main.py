@@ -4,9 +4,12 @@ import solution
 
 class TestMain(unittest.TestCase):
     def test_basic_addition(self):
-        self.assertEqual(solution.add_numbers(2, 3), 5)
-        self.assertEqual(solution.add_numbers(-1, 1), 0)
-        self.assertEqual(solution.add_numbers(0, 0), 0)
+        result = solution.add_numbers(2, 3)
+        self.assertEqual(result, 5)
+        result = solution.add_numbers(-1, 1)
+        self.assertEqual(result, 0)
+        result = solution.add_numbers(0, 0)
+        self.assertEqual(result, 0)
 
     def test_large_numbers(self):
         self.assertEqual(solution.add_numbers(999999, 1), 1000000)
