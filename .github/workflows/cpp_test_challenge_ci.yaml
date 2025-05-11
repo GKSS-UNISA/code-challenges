@@ -4,9 +4,11 @@ on:
   push:
     paths:
       - 'cpp/test_challenge/**'
+      - 'cpp/CMakeLists.txt'
   pull_request:
     paths:
       - 'cpp/test_challenge/**'
+      - 'cpp/CMakeLists.txt'
 
 jobs:
   build-and-test:
@@ -18,21 +20,17 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake g++
-
-      - name: Create build directory
-        run: |
-          mkdir -p cpp/test_challenge/build
-          cd cpp/test_challenge/build
+          sudo apt-get install -y cmake g++ libgtest-dev
 
       - name: Configure CMake
         run: |
-          cmake ../..
+          cmake -S cpp -B cpp/build
 
       - name: Build
         run: |
-          cmake --build .
+          cmake --build cpp/build
 
       - name: Run tests
+        working-directory: cpp/build
         run: |
-          ctest
+          ctest --output-on-failure
