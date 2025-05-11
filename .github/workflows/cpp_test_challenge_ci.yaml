@@ -18,22 +18,22 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake g++
+          sudo apt-get install -y cmake g++ libgtest-dev
 
       - name: Create build directory
-        run: mkdir build
+        run: mkdir -p cpp/test_challenge/build
 
       - name: Configure CMake
         run: |
-          cd build
-          cmake ../cpp
+          cd cpp/test_challenge/build
+          cmake ..
 
       - name: Build
         run: |
-          cd build
+          cd cpp/test_challenge/build
           cmake --build .
 
       - name: Run tests
         run: |
-          cd build
+          cd cpp/test_challenge/build
           ctest
