@@ -31,10 +31,8 @@ jobs:
 
       - name: Build
         run: |
-          cd test_challenge/build
           cmake --build .
 
       - name: Run tests
         run: |
-          cd test_challenge/build
           ctest
