@@ -21,12 +21,13 @@ jobs:
           sudo apt-get install -y cmake g++
 
       - name: Create build directory
-        run: mkdir -p cpp/test_challenge/build
+        run: |
+          mkdir -p cpp/test_challenge/build
+          cd cpp/test_challenge/build
 
       - name: Configure CMake
         run: |
-          cd cpp/
-          cmake . -B test_challenge/build
+          cmake ../..
 
       - name: Build
         run: |
