@@ -1,0 +1,39 @@
+name: C++ Test Challenge CI
+
+on:
+  push:
+    paths:
+      - 'cpp/test_challenge/**'
+  pull_request:
+    paths:
+      - 'cpp/test_challenge/**'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake g++
+
+      - name: Create build directory
+        run: mkdir -p cpp/test_challenge/build
+
+      - name: Configure CMake
+        run: |
+          cd cpp/test_challenge/build
+          cmake ..
+
+      - name: Build
+        run: |
+          cd cpp/test_challenge/build
+          cmake --build .
+
+      - name: Run tests
+        run: |
+          cd cpp/test_challenge/build
+          ctest
