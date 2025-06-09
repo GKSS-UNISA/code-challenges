@@ -22,5 +22,5 @@ jobs:
       
       - name: Run unit tests
         run: |
-          cd pyton/test_challenge
+          cd python/test_challenge
           python -m unittest test_main.py -v
