@@ -31,15 +31,21 @@
 ## 📖 How to Use
 
 1. Fork this repo
-2. Clone the repo
+2. Clone the your fork
 3. Navigate to the challenge you want to solve
 3. Read the challenge README
-4. Create your solution
+4. Write up your solution
 5. Commit & push your changes
 
 ## 🤝 Contributing
 
-While you can't modify the workflow files, we welcome:
+While you shouldn't modify the workflow files, we welcome:
 - 🐛 Bug reports
 - 💭 Suggestions for new challenges
 - 📚 Documentation improvements
+
+> If you want to contribute new solutions, follow the guidelines provided in [contributions guideline](./CONTRIBUTING.md)
+
+---
+
+<p align="center">Made with ❤️ by GKSS UNISA</p>
