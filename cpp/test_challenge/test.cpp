@@ -1,5 +1,5 @@
-#include <gtest/gtest.h>
 #include "solution.h"
+#include <gtest/gtest.h>
 
 TEST(TestChallengeTests, TestLibTest)
 {
@@ -9,7 +9,6 @@ TEST(TestChallengeTests, TestLibTest)
 
 TEST(TestChallengeTests, TestAddNumbersFunction)
 {
-    int sum = add_numbers(1, 2);
-
+    const int sum = add_numbers(1, 2);
     EXPECT_EQ(3, sum);
 }
