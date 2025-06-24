@@ -1,6 +1,12 @@
+// This file contains a list of recommended extensions for the project.
+// These extensions will be suggested to users when they open the project in VS Code.
+// It is a good practice to include extensions that enhance the development experience.
+
 {
   "recommendations": [
     "ms-vscode.cmake-tools",
-    "twxs.cmake"
+    "twxs.cmake",
+    "ms-python.python",
+    "ms-python.black-formatter",
   ]
 }
