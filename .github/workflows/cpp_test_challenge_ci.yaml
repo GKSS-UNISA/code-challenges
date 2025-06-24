@@ -1,6 +1,7 @@
 name: C++ Test Challenge CI
 
 on:
+  workflow_dispatch:
   push:
     paths:
       - 'cpp/test_challenge/**'
