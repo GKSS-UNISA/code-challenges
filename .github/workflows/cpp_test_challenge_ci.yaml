@@ -17,9 +17,6 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
-    env:
-      GKSS_LEADERBOARD_API_KEY: ${{ secrets.GKSS_LEADERBOARD_API_KEY }}
-      GKSS_LEADERBOARD_API_URL: ${{ secrets.GKSS_LEADERBOARD_API_URL }}
     steps:
       - uses: actions/checkout@v4
       
@@ -33,3 +30,16 @@ jobs:
         working-directory: ci-build/
         run: |
           ctest --output-on-failure
+    
+  points-system:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Increment points
+        shell: bash
+        run: |
+          echo "Incrementing points..."
+          curl -X POST ${{ secrets.GKSS_LEADERBOARD_API_URL }} \
+            -H "x-gkssunisa-api-key: ${{ secrets.GKSS_LEADERBOARD_API_KEY }}"
+            -H "Content-Type: application/json" \
+            -d '{"message": "i did it! ${{ github.actor }}"}'
