@@ -1,0 +1,173 @@
+# Template GitHub Actions Workflow for New Challenges
+# 
+# INSTRUCTIONS FOR CONTRIBUTORS:
+# 1. Copy this template and rename it following the pattern: {language}_{challenge_folder_name}_ci.yaml
+#    Examples: python_fibonacci_sequence_ci.yaml, cpp_binary_search_ci.yaml
+# 
+# 2. Update the following sections:
+#    - name: Change to match your challenge
+#    - paths: Update to point to your specific challenge folder
+#    - working-directory: Update to your challenge folder path
+#    - Build and test steps: Customize for your language and testing framework
+#
+# 3. IMPORTANT: Keep the points-system job exactly as shown - do NOT modify the secrets access pattern
+
+name: LANGUAGE CHALLENGE_NAME CI  # Example: Python Fibonacci Sequence CI
+
+# Trigger Configuration
+# This workflow runs when changes are pushed to your specific challenge folder
+on:
+  push:
+    paths:
+      - 'LANGUAGE/CHALLENGE_FOLDER/**'  # Example: 'python/fibonacci_sequence/**'
+
+# Default settings for all jobs
+defaults:
+  run:
+    shell: bash
+    working-directory: ./LANGUAGE/CHALLENGE_FOLDER  # Example: ./python/fibonacci_sequence
+
+# Required permissions
+permissions:
+  contents: read
+
+jobs:
+  # TEST JOB - Customize this section based on your language and testing needs
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Step 1: Checkout the repository code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # PYTHON EXAMPLE - Use this section if your challenge is in Python
+      - name: Set up Python (Python challenges only)
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'  # Adjust version as needed
+      
+      # Install Python dependencies (if you have a requirements.txt)
+      - name: Install Python dependencies (if needed)
+        run: |
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          fi
+      
+      # Run Python tests
+      - name: Run Python unit tests
+        run: python -m unittest test_main.py -v
+
+      # C++ EXAMPLE - Use this section if your challenge is in C++
+      # - name: Build C++ solution
+      #   uses: threeal/cmake-action@v2
+      #   with:
+      #     source-dir: LANGUAGE/CHALLENGE_FOLDER  # Example: cpp/fibonacci_sequence
+      #     build-dir: ci-build
+      # 
+      # - name: Run C++ tests
+      #   working-directory: ci-build/
+      #   run: |
+      #     ctest --output-on-failure
+
+      # JAVASCRIPT/NODE.JS EXAMPLE - Use this section for JavaScript challenges
+      # - name: Set up Node.js
+      #   uses: actions/setup-node@v4
+      #   with:
+      #     node-version: '18'
+      # 
+      # - name: Install dependencies
+      #   run: npm install
+      # 
+      # - name: Run tests
+      #   run: npm test
+
+      # JAVA EXAMPLE - Use this section for Java challenges
+      # - name: Set up JDK
+      #   uses: actions/setup-java@v4
+      #   with:
+      #     java-version: '17'
+      #     distribution: 'temurin'
+      # 
+      # - name: Run tests with Maven
+      #   run: mvn test
+      # 
+      # # OR for Gradle:
+      # - name: Run tests with Gradle
+      #   run: ./gradlew test
+
+  # POINTS SYSTEM JOB - DO NOT MODIFY THIS SECTION
+  # This job awards points to users when they successfully complete challenges
+  points-system:
+    name: Award Points
+    runs-on: ubuntu-latest
+    needs: test  # This job only runs if the test job succeeds
+    defaults:
+      run:
+        shell: bash
+        working-directory: .  # Run from repository root
+    
+    steps:
+      # CRITICAL: This step must remain exactly as written
+      # The secrets and API call pattern must not be changed
+      - name: Check secrets and increment points
+        shell: bash
+        run: |
+          if [[ -n "${{ secrets.GKSS_LEADERBOARD_API_URL }}" && -n "${{ secrets.GKSS_LEADERBOARD_API_KEY }}" ]]; then
+            echo "Incrementing points..."
+            curl -X POST ${{ secrets.GKSS_LEADERBOARD_API_URL }} \
+              -H "x-gkssunisa-api-key: ${{ secrets.GKSS_LEADERBOARD_API_KEY }}" \
+              -H "Content-Type: application/json" \
+              -d '{"message": "i did it! ${{ github.actor }}"}'
+          else
+            echo "Skipping points increment - required secrets not found"
+            exit 1
+          fi
+
+# DETAILED EXPLANATION OF WORKFLOW COMPONENTS:
+#
+# 1. WORKFLOW NAME:
+#    - Should clearly identify the language and challenge
+#    - Helps distinguish between different challenge workflows
+#
+# 2. TRIGGER CONFIGURATION (on:):
+#    - 'push' with 'paths' ensures the workflow only runs when your specific challenge folder is modified
+#    - 'workflow_dispatch' allows manual triggering for testing purposes
+#
+# 3. DEFAULTS:
+#    - Sets the shell to bash for consistency
+#    - Sets working-directory to your challenge folder to simplify commands
+#
+# 4. PERMISSIONS:
+#    - 'contents: read' provides the minimum necessary permissions for the workflow
+#
+# 5. TEST JOB:
+#    - Name: Descriptive name for the job
+#    - runs-on: Specifies the runner environment (ubuntu-latest is recommended)
+#    - steps: Series of actions to build and test your solution
+#      - Checkout: Downloads the repository code
+#      - Language setup: Configures the appropriate language runtime
+#      - Dependencies: Installs any required packages/libraries
+#      - Test execution: Runs your test suite
+#
+# 6. POINTS-SYSTEM JOB:
+#    - needs: test - Ensures this only runs after successful testing
+#    - Checks for required secrets (API URL and API Key)
+#    - Makes API call to increment user points
+#    - CRITICAL: The secrets access pattern must match exactly for security
+#
+# 7. WORKFLOW FILE NAMING:
+#    - Format: {language}_{challenge_folder_name}_ci.yaml
+#    - This naming convention helps track which workflows exist
+#    - Makes it easy to identify the corresponding challenge folder
+#
+# CUSTOMIZATION CHECKLIST:
+# - [ ] Update workflow name
+# - [ ] Update trigger paths to match your challenge folder
+# - [ ] Update working-directory paths
+# - [ ] Choose appropriate language setup steps
+# - [ ] Configure your specific build/test commands
+# - [ ] Test the workflow locally if possible
+# - [ ] Verify the workflow file name follows the naming convention
+# - [ ] Ensure points-system job remains unchanged
