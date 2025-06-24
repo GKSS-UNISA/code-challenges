@@ -10,6 +10,8 @@ defaults:
     shell: bash
     working-directory: ./cpp/test_challenge
 
+permissions:
+  contents: read
 
 jobs:
   test:
@@ -23,6 +25,7 @@ jobs:
       - name: Build solution
         uses: threeal/cmake-action@v2
         with:
+          source-dir: cpp/test_challenge
           build-dir: ci-build
 
       - name: Run tests
