@@ -34,12 +34,21 @@ jobs:
   points-system:
     runs-on: ubuntu-latest
     needs: test
+    defaults:
+      run:
+        shell: bash
+        working-directory: .
     steps:
-      - name: Increment points
+      - name: Check secrets and increment points
         shell: bash
         run: |
-          echo "Incrementing points..."
-          curl -X POST ${{ secrets.GKSS_LEADERBOARD_API_URL }} \
-            -H "x-gkssunisa-api-key: ${{ secrets.GKSS_LEADERBOARD_API_KEY }}"
-            -H "Content-Type: application/json" \
-            -d '{"message": "i did it! ${{ github.actor }}"}'
+          if [[ -n "${{ secrets.GKSS_LEADERBOARD_API_URL }}" && -n "${{ secrets.GKSS_LEADERBOARD_API_KEY }}" ]]; then
+            echo "Incrementing points..."
+            curl -X POST ${{ secrets.GKSS_LEADERBOARD_API_URL }} \
+              -H "x-gkssunisa-api-key: ${{ secrets.GKSS_LEADERBOARD_API_KEY }}" \
+              -H "Content-Type: application/json" \
+              -d '{"message": "i did it! ${{ github.actor }}"}'
+          else
+            echo "Skipping points increment - required secrets not found"
+            exit 1
+          fi
