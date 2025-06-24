@@ -4,33 +4,28 @@ on:
   push:
     paths:
       - 'cpp/test_challenge/**'
-      - 'cpp/CMakeLists.txt'
-  pull_request:
-    paths:
-      - 'cpp/test_challenge/**'
-      - 'cpp/CMakeLists.txt'
+
+defaults:
+  run:
+    shell: bash
+    working-directory: ./cpp/test_challenge
+
 
 jobs:
-  build-and-test:
+  test:
     runs-on: ubuntu-latest
-
+    env:
+      GKSS_LEADERBOARD_API_KEY: ${{ secrets.GKSS_LEADERBOARD_API_KEY }}
+      GKSS_LEADERBOARD_API_URL: ${{ secrets.GKSS_LEADERBOARD_API_URL }}
     steps:
       - uses: actions/checkout@v4
       
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y cmake g++ libgtest-dev
-
-      - name: Configure CMake
-        run: |
-          cmake -S cpp -B cpp/build
-
-      - name: Build
-        run: |
-          cmake --build cpp/build
+      - name: Build solution
+        uses: threeal/cmake-action@v2
+        with:
+          build-dir: ci-build
 
       - name: Run tests
-        working-directory: cpp/build
+        working-directory: ci-build/
         run: |
           ctest --output-on-failure
