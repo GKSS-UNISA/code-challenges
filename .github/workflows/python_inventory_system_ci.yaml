@@ -1,0 +1,55 @@
+name: Python Inventory System CI
+
+on:
+  push:
+    paths:
+      - 'python/inventory_system/**'
+
+defaults:
+  run:
+    shell: bash
+    working-directory: ./python/inventory_system
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Run Python unit tests
+        run: python -m unittest test_main.py -v
+
+  points-system:
+    name: Award Points
+    runs-on: ubuntu-latest
+    needs: test
+    defaults:
+      run:
+        shell: bash
+        working-directory: .
+    
+    steps:
+      - name: Check secrets and increment points
+        shell: bash
+        run: |
+          if [[ -n "${{ secrets.GKSS_LEADERBOARD_API_URL }}" && -n "${{ secrets.GKSS_LEADERBOARD_API_KEY }}" ]]; then
+            echo "Incrementing points..."
+            curl -X POST ${{ secrets.GKSS_LEADERBOARD_API_URL }} \
+              -H "x-gkssunisa-api-key: ${{ secrets.GKSS_LEADERBOARD_API_KEY }}" \
+              -H "Content-Type: application/json" \
+              -d '{"message": "i did it! ${{ github.actor }}"}'
+          else
+            echo "Skipping points increment - required secrets not found"
+            exit 1
+          fi
